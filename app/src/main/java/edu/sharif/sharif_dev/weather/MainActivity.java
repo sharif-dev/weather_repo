@@ -48,5 +48,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+      
+      // goToWeatherPage(8 , 8);
+    }
+
+    private void goToWeatherPage(double latitude, double longitude){
+        Intent intent = new Intent(this, WeatherForecastActivity.class);
+        intent.putExtra(getString(R.string.latitude), latitude);
+        intent.putExtra(getString(R.string.longitude), longitude);
+        startActivity(intent);
     }
 }
+
