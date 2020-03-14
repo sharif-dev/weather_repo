@@ -34,11 +34,17 @@ public class MainActivity extends AppCompatActivity {
                     getMap.start();
 
 
+
+                    // show forecast page
+                    // setContentView(R.layout.weather_forecast);
+
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(), R.string.search_input_error, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                     toast.show();
                 }
+//                new WeatherForecast(getApplicationContext(), getString(R.string.forecast_provider),
+//                        getString(R.string.secret_key)).getWeather(42.3601, -71.0589);
             }
         });
     }

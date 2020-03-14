@@ -3,4 +3,6 @@
     <string name="search_location">Search Location …</string>
     <string name="search_input_error">Please enter a location</string>
     <string name="mapbox_error">Error from Map box</string>
+    <string name="secret_key">82524d55a91aa65880a940d14ae199c2</string>
+    <string name="forecast_provider">https://api.darksky.net/forecast/</string>
 </resources>
