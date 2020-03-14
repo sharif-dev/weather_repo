@@ -50,15 +50,23 @@ public class MainActivity extends AppCompatActivity {
                     toast.show();
                 }*/
 
-                goToWeatherPage(8, 8);
+                goToWeatherPage(37.8267, -122.4233, 1);
             }
         });
     }
 
-    private void goToWeatherPage(double latitude, double longitude){
+    /**
+     *
+     * @param latitude: if not connected, not important
+     * @param longitude: if not connected, not important
+     * @param internetConnection: if not connected: 0, else 1
+     */
+    private void goToWeatherPage(double latitude, double longitude, int internetConnection) {
         Intent intent = new Intent(this, WeatherForecastActivity.class);
         intent.putExtra(getString(R.string.latitude), latitude);
         intent.putExtra(getString(R.string.longitude), longitude);
+        // client has internet
+        intent.putExtra(getString(R.string.internet_status), internetConnection);
         startActivity(intent);
     }
 }
