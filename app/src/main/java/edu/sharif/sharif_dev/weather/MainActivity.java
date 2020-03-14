@@ -1,5 +1,6 @@
 package edu.sharif.sharif_dev.weather;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -10,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
+
+import com.google.gson.Gson;
 
 import java.util.Objects;
 
@@ -45,17 +49,16 @@ public class MainActivity extends AppCompatActivity {
                     toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                     toast.show();
                 }*/
-                goToWeatherPage(42.3601, -71.0589);
+
+                goToWeatherPage(8, 8);
             }
         });
     }
 
     private void goToWeatherPage(double latitude, double longitude){
-        setContentView(R.layout.weather_forecast);
-        ImageView waiting = findViewById(R.id.wait);
-        TextView status = findViewById(R.id.result);
-        WeatherForecast weatherForecast = new WeatherForecast(getApplicationContext(), getString(R.string.forecast_provider),
-                getString(R.string.secret_key), waiting, status);
-        weatherForecast.getWeather(latitude, longitude);
+        Intent intent = new Intent(this, WeatherForecastActivity.class);
+        intent.putExtra(getString(R.string.latitude), latitude);
+        intent.putExtra(getString(R.string.longitude), longitude);
+        startActivity(intent);
     }
 }

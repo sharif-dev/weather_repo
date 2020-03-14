@@ -5,4 +5,6 @@
     <string name="mapbox_error">Error from Map box</string>
     <string name="secret_key">82524d55a91aa65880a940d14ae199c2</string>
     <string name="forecast_provider">https://api.darksky.net/forecast/</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
 </resources>
