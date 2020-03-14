@@ -17,11 +17,17 @@ class MapClass {
         private String text;
         private String place_name;
         private Object bbox;
-        private Object center;
+        private ArrayList center;
         private Object geometry;
         private Object context;
 
+        public ArrayList getCenter() {
+            return center;
+        }
 
+        public String getPlace_name() {
+            return place_name;
+        }
     }
 
     public ArrayList<CityClass> getFeatures() {
