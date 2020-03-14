@@ -2,6 +2,9 @@ package edu.sharif.sharif_dev.weather;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,14 +21,20 @@ public class WeatherForecast {
     private String forecastProvider;
     private String secretKey;
     private Context context;
+    private ImageView wating;
+    private TextView status;
 
-    public WeatherForecast(Context context, String forecastProvider, String secretKey) {
+    public WeatherForecast(Context context, String forecastProvider, String secretKey, ImageView wating
+            , TextView status) {
         this.context = context;
         this.secretKey = secretKey;
         this.forecastProvider = forecastProvider;
+        this.wating = wating;
+        this.status = status;
     }
 
-    public void getWeather(final double latitude,final double longitude){
+    public void getWeather(final double latitude, final double longitude) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -36,13 +45,24 @@ public class WeatherForecast {
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                // do something with response
+                                // todo do something with response
                                 Log.d("darksky", response);
+
+                                // remove waiting gif
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                wating.setVisibility(View.GONE);
+
+                                // show result (without UI)
+                                status.setText(response);
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // handle errors
+                        // todo handle errors
                         Log.d("error_darksky", error.getMessage());
                     }
                 });

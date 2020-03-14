@@ -6,7 +6,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Objects;
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String searchText;
+                /*String searchText;
                 EditText search_input = findViewById(R.id.search_inp);
                 if (search_input.getText() != null & !Objects.requireNonNull(search_input.getText()).toString().equals("")) {
                     searchText = search_input.getText().toString(); // get query from user
@@ -36,16 +38,24 @@ public class MainActivity extends AppCompatActivity {
 
 
                     // show forecast page
-                    // setContentView(R.layout.weather_forecast);
+                    //gotoWeatherPage(42.3601, -71.0589);
 
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(), R.string.search_input_error, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                     toast.show();
-                }
-//                new WeatherForecast(getApplicationContext(), getString(R.string.forecast_provider),
-//                        getString(R.string.secret_key)).getWeather(42.3601, -71.0589);
+                }*/
+                goToWeatherPage(42.3601, -71.0589);
             }
         });
+    }
+
+    private void goToWeatherPage(double latitude, double longitude){
+        setContentView(R.layout.weather_forecast);
+        ImageView waiting = findViewById(R.id.wait);
+        TextView status = findViewById(R.id.result);
+        WeatherForecast weatherForecast = new WeatherForecast(getApplicationContext(), getString(R.string.forecast_provider),
+                getString(R.string.secret_key), waiting, status);
+        weatherForecast.getWeather(latitude, longitude);
     }
 }
