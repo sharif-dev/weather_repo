@@ -33,6 +33,7 @@ public class GetMap extends Thread {
         this.progressBar = progressBar;
     }
 
+    @Override
     public void run(){
 
 // Instantiate the RequestQueue.
@@ -54,7 +55,7 @@ public class GetMap extends Thread {
 
 
                         }catch (Exception e){
-
+                            showError();
                         }
 
                     }
@@ -63,15 +64,18 @@ public class GetMap extends Thread {
             public void onErrorResponse(VolleyError error) {
                 Log.d("tag",error.getMessage());
                 progressBar.setVisibility(View.GONE);
-                Toast toast = Toast.makeText(context, R.string.mapbox_error, Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
-                toast.show();
+                showError();
             }
         });
 
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
 
+    }
+    void showError(){
+        Toast toast = Toast.makeText(context, R.string.mapbox_error, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
 }
