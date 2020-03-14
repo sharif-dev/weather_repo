@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +24,16 @@ public class MainActivity extends AppCompatActivity {
                 String searchText;
                 EditText search_input = findViewById(R.id.search_inp);
                 if (search_input.getText() != null) {
-                    searchText = search_input.getText().toString();
+                    searchText = search_input.getText().toString(); // get query from user
+
+                    ProgressBar progressBar = findViewById(R.id.progressBar);
+                    progressBar.setVisibility(View.VISIBLE);
+
+                    GetMap getMap = new GetMap(searchText, getApplicationContext(),progressBar); // make map box thread
+                    getMap.start();
+
+
+
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(), R.string.serach_input_error, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM|Gravity.CENTER, 0, 0);
