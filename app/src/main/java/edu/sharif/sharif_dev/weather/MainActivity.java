@@ -7,7 +7,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,35 +25,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final LinearLayout linearLayout = findViewById(R.id.linearLayout_search);
+
+
         Button search_btn = findViewById(R.id.search_btn);
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*String searchText;
+                String searchText;
                 EditText search_input = findViewById(R.id.search_inp);
                 if (search_input.getText() != null & !Objects.requireNonNull(search_input.getText()).toString().equals("")) {
                     searchText = search_input.getText().toString(); // get query from user
 
                     ProgressBar progressBar = findViewById(R.id.progressBar);
                     progressBar.setVisibility(View.VISIBLE);
-
-                    GetMap getMap = new GetMap(searchText, getApplicationContext(), progressBar); // make map box thread
+// make map box thread
+                    GetMap getMap = new GetMap(searchText, getApplicationContext(), progressBar,linearLayout);
                     getMap.start();
 
-
-
-                    // show forecast page
-                    //gotoWeatherPage(42.3601, -71.0589);
 
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(), R.string.search_input_error, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                     toast.show();
-                }*/
-
-                goToWeatherPage(37.8267, -122.4233, 1);
+                }
             }
         });
+
+      // goToWeatherPage(8 , 8);
     }
 
     /**
