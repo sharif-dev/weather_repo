@@ -1,12 +1,16 @@
 package edu.sharif.sharif_dev.weather;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Objects;
@@ -17,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final LinearLayout linearLayout = findViewById(R.id.linearLayout_search);
+
 
         Button search_btn = findViewById(R.id.search_btn);
         search_btn.setOnClickListener(new View.OnClickListener() {
@@ -29,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
                     ProgressBar progressBar = findViewById(R.id.progressBar);
                     progressBar.setVisibility(View.VISIBLE);
-
-                    GetMap getMap = new GetMap(searchText, getApplicationContext(), progressBar); // make map box thread
+// make map box thread
+                    GetMap getMap = new GetMap(searchText, getApplicationContext(), progressBar,linearLayout);
                     getMap.start();
 
 
