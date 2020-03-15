@@ -27,12 +27,14 @@ public class GetMap extends Thread {
     private ProgressBar progressBar;
     private LinearLayout linearLayout ;
     private final String accessToken = "pk.eyJ1IjoiemFocmF5b3VzZWZpIiwiYSI6ImNrN3A3OTB4NjA3OTQzZnJybm44Nmh4YW0ifQ.WDrn4Q_HTxBV8D53wtemYA";
+    private Handler handler;
 
     GetMap(String query, Context context, ProgressBar progressBar, LinearLayout linearLayout){
         this.query = query;
         this.context = context;
         this.progressBar = progressBar;
         this.linearLayout = linearLayout;
+        handler = new Handler();
     }
 
     @Override
@@ -72,7 +74,6 @@ public class GetMap extends Thread {
                                     }
                                 }
                             };
-                            Handler handler = new Handler();
                             handler.post(showCode);
 
                         }catch (Exception e){

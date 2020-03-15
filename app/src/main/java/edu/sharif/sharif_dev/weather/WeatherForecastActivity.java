@@ -7,11 +7,24 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +50,6 @@ import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,22 +61,22 @@ import java.util.List;
  */
 public class WeatherForecastActivity extends AppCompatActivity {
     private Context context;
-    private ImageView waiting;
-    private TextView status;
+    private ImageView waitingGif;
     private ForecastResponse forecastResponse;
-    WeatherForecastDbHelper dbHelper;
+    private WeatherForecastDbHelper dbHelper;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_forecast);
         context = getApplicationContext();
-        waiting = findViewById(R.id.wait);
-        status = findViewById(R.id.result);
+        waitingGif = findViewById(R.id.waiting_gif);
         Intent intent = getIntent();
         dbHelper = new WeatherForecastDbHelper(getApplicationContext());
-        int internetStatus = intent.getIntExtra(getString(R.string.internet_status), 0);
-        if (internetStatus == 1) {
+        handler = new Handler();
+        boolean internetStatus = intent.getBooleanExtra(getString(R.string.internet_status), false);
+        if (internetStatus) {
             double longitude = intent.getDoubleExtra(getString(R.string.longitude), 0);
             double latitude = intent.getDoubleExtra(getString(R.string.latitude), 0);
             getWeather(latitude, longitude);
@@ -73,6 +84,7 @@ public class WeatherForecastActivity extends AppCompatActivity {
             // todo no internet access
         }
     }
+
 
     public void getWeather(final double latitude, final double longitude) {
         // Thread for sending request
@@ -105,19 +117,29 @@ public class WeatherForecastActivity extends AppCompatActivity {
     }
 
     private void getResponse(String response) {
-        waiting.setVisibility(View.GONE);
+        stopWaitingGif();
 
-        // todo save local (other thread)
         saveResult(response);
 
+        // todo
         System.out.println("response: " + response);
         // show result (without UI)
-        status.setText(response);
+
         this.forecastResponse = new Gson().fromJson(response, ForecastResponse.class);
+        List<DailyData> dailyData = forecastResponse.daily.data;
+        ViewPager pager = findViewById(R.id.pager);
+        pager.setVisibility(View.VISIBLE);
+        List<ScreenSlidePageFragment> fragments = new ArrayList<>();
+        for (DailyData dailyDatum : dailyData) {
+            fragments.add(ScreenSlidePageFragment.getInstance(dailyDatum.summary, dailyDatum.icon
+                    , String.valueOf(dailyDatum.time)));
+        }
+        pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragments));
     }
 
     private void handleError(VolleyError error) {
-        waiting.setVisibility(View.GONE);
+        stopWaitingGif();
+
         if (error instanceof NoConnectionError) {
             ConnectivityManager cm =
                     (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -173,15 +195,21 @@ public class WeatherForecastActivity extends AppCompatActivity {
         finish();
     }
 
-    private void saveResult(String response) {
-        // get writable from database
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        // insert values into database
-        Date date = Calendar.getInstance().getTime();
-        values.put(WeatherForecastContract.FeedEntry.COLUMN_NAME_DATE, date.toString());
-        values.put(WeatherForecastContract.FeedEntry.COLUMN_NAME_JSON, response);
-        db.insert(WeatherForecastContract.FeedEntry.TABLE_NAME, null, values);
+    private void saveResult(final String response) {
+        // Thread for writing to DataBase
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // get writable from database
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                // insert values into database
+                Date date = Calendar.getInstance().getTime();
+                values.put(WeatherForecastContract.FeedEntry.COLUMN_NAME_DATE, date.toString());
+                values.put(WeatherForecastContract.FeedEntry.COLUMN_NAME_JSON, response);
+                db.insert(WeatherForecastContract.FeedEntry.TABLE_NAME, null, values);
+            }
+        }).start();
     }
 
     private HashMap<String, String> readFromLocalHistory() {
@@ -205,4 +233,33 @@ public class WeatherForecastActivity extends AppCompatActivity {
         cursor.close();
         return result;
     }
+
+    private void stopWaitingGif() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                waitingGif.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        private List<ScreenSlidePageFragment> fragments;
+
+        public ScreenSlidePagerAdapter(FragmentManager fm, List<ScreenSlidePageFragment> fragments) {
+            super(fm);
+            this.fragments = fragments;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return 6;
+        }
+    }
+
 }
