@@ -127,14 +127,22 @@ public class WeatherForecastActivity extends AppCompatActivity {
 
         this.forecastResponse = new Gson().fromJson(response, ForecastResponse.class);
         List<DailyData> dailyData = forecastResponse.daily.data;
-        ViewPager pager = findViewById(R.id.pager);
-        pager.setVisibility(View.VISIBLE);
-        List<ScreenSlidePageFragment> fragments = new ArrayList<>();
+        final ViewPager pager = findViewById(R.id.pager);
+        final List<ScreenSlidePageFragment> fragments = new ArrayList<>();
         for (DailyData dailyDatum : dailyData) {
             fragments.add(ScreenSlidePageFragment.getInstance(dailyDatum.summary, dailyDatum.icon
                     , String.valueOf(dailyDatum.time)));
         }
-        pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragments));
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragments));
+                pager.setPageTransformer(true, new ParallaxPageTransformer());
+                pager.setVisibility(View.VISIBLE);
+
+            }
+        });
     }
 
     private void handleError(VolleyError error) {
