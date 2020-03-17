@@ -98,11 +98,6 @@ public class WeatherForecastActivity extends AppCompatActivity {
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
                                 getResponse(response);
                             }
                         }, new Response.ErrorListener() {
@@ -130,8 +125,7 @@ public class WeatherForecastActivity extends AppCompatActivity {
         final ViewPager pager = findViewById(R.id.pager);
         final List<ScreenSlidePageFragment> fragments = new ArrayList<>();
         for (DailyData dailyDatum : dailyData) {
-            fragments.add(ScreenSlidePageFragment.getInstance(dailyDatum.summary, dailyDatum.icon
-                    , String.valueOf(dailyDatum.time)));
+            fragments.add(ScreenSlidePageFragment.getInstance(dailyDatum));
         }
 
         handler.post(new Runnable() {
@@ -266,7 +260,7 @@ public class WeatherForecastActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 6;
+            return 7;
         }
     }
 

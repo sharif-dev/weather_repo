@@ -12,16 +12,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ScreenSlidePageFragment extends Fragment {
-    private String day;
-    private String icon;
-    private String summary;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
-    public static ScreenSlidePageFragment getInstance(String summary, String icon, String day) {
+public class ScreenSlidePageFragment extends Fragment {
+    private DailyData dailyData;
+
+    public static ScreenSlidePageFragment getInstance(DailyData dailyData) {
         ScreenSlidePageFragment screenSlidePageFragment = new ScreenSlidePageFragment();
-        screenSlidePageFragment.day = day;
-        screenSlidePageFragment.icon = icon;
-        screenSlidePageFragment.summary = summary;
+        screenSlidePageFragment.dailyData = dailyData;
         return screenSlidePageFragment;
     }
 
@@ -31,36 +31,59 @@ public class ScreenSlidePageFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_screen_slide_page, container, false);
         TextView day = rootView.findViewById(R.id.day);
-        day.setText(this.day);
-        TextView icon = rootView.findViewById(R.id.icon);
-        icon.setText(this.icon);
+        setTime(day);
+        TextView icon = rootView.findViewById(R.id.title_summary);
+        icon.setText(dailyData.icon);
         TextView sum = rootView.findViewById(R.id.summary);
-        sum.setText(this.summary);
+        sum.setText(dailyData.summary);
+        TextView temperature = rootView.findViewById(R.id.temperature);
+        setTemperatur(temperature);
+        TextView date = rootView.findViewById(R.id.date);
+        setDate(date);
+
         ImageView imageView = rootView.findViewById(R.id.imageView3);
         imageView.setImageResource(getIdForImageView());
         return rootView;
     }
 
+    private void setDate(TextView textView) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy");
+        String date = sdf.format(new Date(Long.valueOf(dailyData.time) * 1000));
+        textView.setText(date);
+    }
+
+    private void setTime(TextView textView) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        String dayString = sdf.format(new Date(Long.valueOf(dailyData.time) * 1000));
+        textView.setText(dayString);
+    }
+
+    private void setTemperatur(TextView textView) {
+        double temp = (dailyData.temperatureHigh + dailyData.temperatureLow) / 2;
+        // convert to celsius
+        textView.setText(String.valueOf(Math.round((temp - 32) * (0.5556))));
+    }
+
     private int getIdForImageView() {
-        if (icon.equals("clear-day"))
+        if (dailyData.icon.equals("clear-day"))
             return R.drawable.clear_day;
-        else if (icon.equals("clear-night"))
+        else if (dailyData.icon.equals("clear-night"))
             return R.drawable.clear_night;
-        else if (icon.equals("rain"))
+        else if (dailyData.icon.equals("rain"))
             return R.drawable.rain;
-        else if (icon.equals("snow"))
+        else if (dailyData.icon.equals("snow"))
             return R.drawable.snow;
-        else if (icon.equals("sleet"))
+        else if (dailyData.icon.equals("sleet"))
             return R.drawable.sleet;
-        else if (icon.equals("wind"))
+        else if (dailyData.icon.equals("wind"))
             return R.drawable.wind;
-        else if (icon.equals("fog"))
+        else if (dailyData.icon.equals("fog"))
             return R.drawable.fog;
-        else if (icon.equals("cloudy"))
+        else if (dailyData.icon.equals("cloudy"))
             return R.drawable.cloudy;
-        else if (icon.equals("partly-cloudy-day"))
+        else if (dailyData.icon.equals("partly-cloudy-day"))
             return R.drawable.other;
-        else if (icon.equals("partly-cloudy-night"))
+        else if (dailyData.icon.equals("partly-cloudy-night"))
             return R.drawable.other;
         else
             return R.drawable.other;

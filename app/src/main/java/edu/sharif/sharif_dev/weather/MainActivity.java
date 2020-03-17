@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                     toast.show();
                 }*/
-                goToWeatherPage(37.8267, -122.4233, true);
+                goToWeatherPage(36.819439, 50.871891, true);
             }
         });
 
