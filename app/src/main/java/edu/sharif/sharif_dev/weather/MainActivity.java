@@ -5,17 +5,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,7 +26,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final LinearLayout linearLayout = findViewById(R.id.linearLayout_search);
+
+        final ArrayList<String>  cityNames = new ArrayList<>();
+        ListView list = findViewById(R.id.listview_search);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, cityNames);
+        list.setAdapter(adapter);
+
         Button search_btn = findViewById(R.id.search_btn);
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                     ProgressBar progressBar = findViewById(R.id.progressBar);
                     progressBar.setVisibility(View.VISIBLE);
 // make map box thread
-                    GetMap getMap = new GetMap(searchText, getApplicationContext(), progressBar,linearLayout);
+                    GetMap getMap = new GetMap(searchText, getApplicationContext(), progressBar,cityNames,adapter);
                     getMap.start();
 
 

@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,10 +23,19 @@ public class SearchListAdapter extends ArrayAdapter {
         this.context = context;
         this.cityNameArray = cityNameArray;
     }
+    public int getCount(){
+        return cityNameArray.size();
+    }
+    public Object getItem(int position){
+        return null;
+    }
+    public long getItemId(int position){
+        return 0;
+    }
 
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater= context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.search_list_row, null,true);
+        View rowView = inflater.inflate(R.layout.search_list_row, null);
 
         //this code gets references to objects in the listview_row.xml file
         TextView nameTextField = (TextView) rowView.findViewById(R.id.cityNameID);
