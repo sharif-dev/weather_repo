@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Weather</string>
+    <string name="app_name" translatable="false">Weather</string>
     <string name="search_location">Search Location …</string>
     <string name="search_input_error">Please enter a location</string>
     <string name="mapbox_error">Error from Map box</string>
     <string name="secret_key">82524d55a91aa65880a940d14ae199c2</string>
-    <string name="forecast_provider">https://api.darksky.net/forecast/</string>
+    <string name="forecast_provider" translatable="false">https://api.darksky.net/forecast/</string>
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
     <string name="internet_status">internet_status</string>
