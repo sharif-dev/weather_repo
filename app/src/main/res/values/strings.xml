@@ -7,4 +7,6 @@
     <string name="forecast_provider">https://api.darksky.net/forecast/</string>
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
+    <string name="internet_status">internet_status</string>
+    <string name="summary">Summary</string>
 </resources>

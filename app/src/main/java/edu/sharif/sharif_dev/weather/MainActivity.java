@@ -14,6 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -25,12 +28,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         final ArrayList<String>  cityNames = new ArrayList<>();
         final ListView list = findViewById(R.id.listview_search);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, cityNames);
         list.setAdapter(adapter);
         final ArrayList<ArrayList<Double>> centerClasses = new ArrayList<>();
-
 
         Button search_btn = findViewById(R.id.search_btn);
         search_btn.setOnClickListener(new View.OnClickListener() {
@@ -62,18 +65,25 @@ public class MainActivity extends AppCompatActivity {
                 //Log.d("pos",""+position);
                 double latitude = centerClasses.get(position).get(0);
                 double longitude = centerClasses.get(position).get(1);
-                goToWeatherPage(latitude, longitude);
+                goToWeatherPage(latitude, longitude,true);
 
             }
         });
       // goToWeatherPage(8 , 8);
+
     }
 
-    private void goToWeatherPage(double latitude, double longitude){
+    /**
+     * @param latitude:           if not connected, not important
+     * @param longitude:          if not connected, not important
+     * @param internetConnection: if not connected: false, else true
+     */
+    private void goToWeatherPage(double latitude, double longitude, boolean internetConnection) {
         Intent intent = new Intent(this, WeatherForecastActivity.class);
         intent.putExtra(getString(R.string.latitude), latitude);
         intent.putExtra(getString(R.string.longitude), longitude);
+        // client has internet
+        intent.putExtra(getString(R.string.internet_status), internetConnection);
         startActivity(intent);
     }
 }
-
