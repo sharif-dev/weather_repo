@@ -12,6 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -23,17 +26,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         final ArrayList<String>  cityNames = new ArrayList<>();
         ListView list = findViewById(R.id.listview_search);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, cityNames);
         list.setAdapter(adapter);
 
-
         Button search_btn = findViewById(R.id.search_btn);
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String searchText;
+
+                /*String searchText;
                 EditText search_input = findViewById(R.id.search_inp);
                 if (search_input.getText() != null & !Objects.requireNonNull(search_input.getText()).toString().equals("")) {
                     searchText = search_input.getText().toString(); // get query from user
@@ -49,18 +53,24 @@ public class MainActivity extends AppCompatActivity {
                     Toast toast = Toast.makeText(getApplicationContext(), R.string.search_input_error, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                     toast.show();
-                }
+                }*/
+                goToWeatherPage(36.819439, 50.871891, true);
             }
         });
-      
-      // goToWeatherPage(8 , 8);
+
     }
 
-    private void goToWeatherPage(double latitude, double longitude){
+    /**
+     * @param latitude:           if not connected, not important
+     * @param longitude:          if not connected, not important
+     * @param internetConnection: if not connected: false, else true
+     */
+    private void goToWeatherPage(double latitude, double longitude, boolean internetConnection) {
         Intent intent = new Intent(this, WeatherForecastActivity.class);
         intent.putExtra(getString(R.string.latitude), latitude);
         intent.putExtra(getString(R.string.longitude), longitude);
+        // client has internet
+        intent.putExtra(getString(R.string.internet_status), internetConnection);
         startActivity(intent);
     }
 }
-
