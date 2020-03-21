@@ -22,8 +22,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,8 +53,13 @@ import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +73,7 @@ public class WeatherForecastActivity extends AppCompatActivity {
     private ForecastResponse forecastResponse;
     private WeatherForecastDbHelper dbHelper;
     private Handler handler;
+    private String cityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +88,11 @@ public class WeatherForecastActivity extends AppCompatActivity {
         if (internetStatus) {
             double longitude = intent.getDoubleExtra(getString(R.string.longitude), 0);
             double latitude = intent.getDoubleExtra(getString(R.string.latitude), 0);
+            cityName = intent.getStringExtra(getString(R.string.cityName));
             getWeather(latitude, longitude);
         } else {
-            // todo no internet access
+            stopWaitingGif();
+            noInternetViews();
         }
     }
 
@@ -98,7 +109,7 @@ public class WeatherForecastActivity extends AppCompatActivity {
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                getResponse(response);
+                                getResponse(response, true);
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -111,11 +122,11 @@ public class WeatherForecastActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void getResponse(String response) {
-        stopWaitingGif();
-
-        saveResult(response);
-
+    private void getResponse(String response, boolean connected) {
+        if (connected) {
+            stopWaitingGif();
+            saveResult(response);
+        }
         // todo
         System.out.println("response: " + response);
         // show result (without UI)
@@ -134,7 +145,6 @@ public class WeatherForecastActivity extends AppCompatActivity {
                 pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragments));
                 pager.setPageTransformer(true, new ParallaxPageTransformer());
                 pager.setVisibility(View.VISIBLE);
-
             }
         });
     }
@@ -155,7 +165,10 @@ public class WeatherForecastActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(context, "Your device is not connected to internet.",
                         Toast.LENGTH_SHORT).show();
-                // todo load from local (return)
+                // load from database
+                ((ViewPager) findViewById(R.id.pager)).setVisibility(View.GONE);
+                noInternetViews();
+                return;
             }
         } else if (error.getCause() == null) {
             ForecastResponseError responseError = new Gson().fromJson(new String(error.networkResponse.data)
@@ -206,31 +219,36 @@ public class WeatherForecastActivity extends AppCompatActivity {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 ContentValues values = new ContentValues();
                 // insert values into database
-                Date date = Calendar.getInstance().getTime();
-                values.put(WeatherForecastContract.FeedEntry.COLUMN_NAME_DATE, date.toString());
+                Timestamp date = new Timestamp(new Date().getTime());
+                values.put(WeatherForecastContract.FeedEntry.COLUMN_NAME_DATE, date.getTime());
                 values.put(WeatherForecastContract.FeedEntry.COLUMN_NAME_JSON, response);
+                values.put(WeatherForecastContract.FeedEntry.CITY_NAME, cityName);
                 db.insert(WeatherForecastContract.FeedEntry.TABLE_NAME, null, values);
             }
         }).start();
     }
 
-    private HashMap<String, String> readFromLocalHistory() {
+    private HashMap<String, String[]> readFromLocalHistory() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] projection = {
                 BaseColumns._ID,
                 WeatherForecastContract.FeedEntry.COLUMN_NAME_DATE,
-                WeatherForecastContract.FeedEntry.COLUMN_NAME_JSON
+                WeatherForecastContract.FeedEntry.COLUMN_NAME_JSON,
+                WeatherForecastContract.FeedEntry.CITY_NAME
         };
         // get all rows from database
         Cursor cursor = db.query(WeatherForecastContract.FeedEntry.TABLE_NAME,
                 projection, null, null, null, null, null);
-        HashMap<String, String> result = new HashMap<>();
+        HashMap<String, String[]> result = new HashMap<>();
         while (cursor.moveToNext()) {
             String date = cursor.getString(
                     cursor.getColumnIndexOrThrow(WeatherForecastContract.FeedEntry.COLUMN_NAME_DATE));
             String json = cursor.getString(
                     cursor.getColumnIndexOrThrow(WeatherForecastContract.FeedEntry.COLUMN_NAME_JSON));
-            result.put(date, json);
+            String city = cursor.getString(
+                    cursor.getColumnIndexOrThrow(WeatherForecastContract.FeedEntry.CITY_NAME)
+            );
+            result.put(date, new String[]{json, city});
         }
         cursor.close();
         return result;
@@ -262,6 +280,35 @@ public class WeatherForecastActivity extends AppCompatActivity {
         public int getCount() {
             return 7;
         }
+    }
+
+    private void noInternetViews() {
+        final HashMap<String, String[]> history = readFromLocalHistory();
+        final ArrayList<String> stringList = new ArrayList<>();
+        final ArrayList<String> keys = new ArrayList<>();
+        for (String string : history.keySet()) {
+            String[] strings = history.get(string);
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM HH:mm");
+            stringList.add(strings[1] + "  " + sdf.format(new Date(Long.valueOf(string))));
+            keys.add(string);
+        }
+        Collections.reverse(stringList);
+        final ListView listView = findViewById(R.id.listView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String response = history.get(keys.get(i))[0];
+                getResponse(response, false);
+            }
+        });
+        final ArrayAdapter arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1
+                , stringList);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                listView.setAdapter(arrayAdapter);
+            }
+        });
     }
 
 }

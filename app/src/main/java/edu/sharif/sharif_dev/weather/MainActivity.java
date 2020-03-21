@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                     toast.show();
                 }*/
-                goToWeatherPage(36.819439, 50.871891, true);
+                goToWeatherPage(45.6892,  40.3890, "", true);
             }
         });
 
@@ -58,11 +58,13 @@ public class MainActivity extends AppCompatActivity {
      * @param latitude:           if not connected, not important
      * @param longitude:          if not connected, not important
      * @param internetConnection: if not connected: false, else true
+     * @param cityName:           name of the city searched
      */
-    private void goToWeatherPage(double latitude, double longitude, boolean internetConnection) {
+    private void goToWeatherPage(double latitude, double longitude, String cityName, boolean internetConnection) {
         Intent intent = new Intent(this, WeatherForecastActivity.class);
         intent.putExtra(getString(R.string.latitude), latitude);
         intent.putExtra(getString(R.string.longitude), longitude);
+        intent.putExtra(getString(R.string.cityName), cityName);
         // client has internet
         intent.putExtra(getString(R.string.internet_status), internetConnection);
         startActivity(intent);

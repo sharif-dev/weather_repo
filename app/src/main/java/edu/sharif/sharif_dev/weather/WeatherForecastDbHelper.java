@@ -16,8 +16,9 @@ public class WeatherForecastDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + WeatherForecastContract.FeedEntry.TABLE_NAME + " (" +
                     WeatherForecastContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +
-                    WeatherForecastContract.FeedEntry.COLUMN_NAME_DATE + " TEXT," +
-                    WeatherForecastContract.FeedEntry.COLUMN_NAME_JSON + " TEXT)";
+                    WeatherForecastContract.FeedEntry.COLUMN_NAME_DATE + " TIMESTAMP," +
+                    WeatherForecastContract.FeedEntry.COLUMN_NAME_JSON + " TEXT," +
+                    WeatherForecastContract.FeedEntry.CITY_NAME + " TEXT)";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + WeatherForecastContract.FeedEntry.TABLE_NAME;
@@ -50,5 +51,6 @@ final class WeatherForecastContract{
         public static final String TABLE_NAME = "weather_forecast";
         public static final String COLUMN_NAME_DATE = "title";
         public static final String COLUMN_NAME_JSON = "subtitle";
+        public static final String CITY_NAME = "city";
     }
 }
