@@ -6,11 +6,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,15 +25,17 @@ public class GetMap extends Thread {
     private Context context;
     private ProgressBar progressBar;
     private final ArrayList<String> cityNames;
+    private ArrayList<ArrayList> centerClasses = new ArrayList<>();
     private ArrayAdapter<String> arrayAdapter;
     private final String accessToken = "pk.eyJ1IjoiemFocmF5b3VzZWZpIiwiYSI6ImNrN3A3OTB4NjA3OTQzZnJybm44Nmh4YW0ifQ.WDrn4Q_HTxBV8D53wtemYA";
 
-    GetMap(String query, Context context, ProgressBar progressBar, ArrayList<String> cityNames, ArrayAdapter<String> arrayAdapter){
+    GetMap(String query, Context context, ProgressBar progressBar, ArrayList<String> cityNames, ArrayAdapter<String> arrayAdapter, ArrayList centerClasses){
         this.query = query;
         this.context = context;
         this.progressBar = progressBar;
         this.cityNames = cityNames;
         this.arrayAdapter = arrayAdapter;
+        this.centerClasses = centerClasses;
     }
 
     @Override
@@ -56,9 +56,12 @@ public class GetMap extends Thread {
                             Gson gson = new Gson();
 
                             MapClass mapClass = gson.fromJson(response, MapClass.class);
+                            centerClasses.clear();
+                            cityNames.clear(); // clear the last list
 
                             for( int i = 0 ;i< mapClass.getFeatures().size();i++){
                                 cityNames.add(mapClass.getFeatures().get(i).getPlace_name());
+                                centerClasses.add(mapClass.getFeatures().get(i).getCenter());
                             }
 
                             sendToUI();
@@ -81,7 +84,7 @@ public class GetMap extends Thread {
         queue.add(stringRequest);
 
     }
-    void showError(){
+    private void showError(){
         Toast toast = Toast.makeText(context, R.string.mapbox_error, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
         toast.show();
