@@ -74,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
                 double latitude = centerClasses.get(position).get(0);
                 double longitude = centerClasses.get(position).get(1);
 
-                System.out.println("lat: " + latitude + " long: " + longitude);
+//                System.out.println("lat: " + latitude + " long: " + longitude);
 
-                goToWeatherPage(latitude, longitude, cityNames.get(position), true);
+                goToWeatherPage(longitude, latitude, cityNames.get(position), true);
 
             }
         });

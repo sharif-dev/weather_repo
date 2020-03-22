@@ -82,9 +82,9 @@ public class WeatherForecastActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_forecast);
+        waitingGif = findViewById(R.id.waiting_gif);
         findViewById(R.id.textView).setVisibility(View.GONE);
         context = getApplicationContext();
-        waitingGif = findViewById(R.id.waiting_gif);
         Intent intent = getIntent();
         dbHelper = new WeatherForecastDbHelper(getApplicationContext());
         handler = new Handler();
@@ -143,11 +143,13 @@ public class WeatherForecastActivity extends AppCompatActivity {
 
         this.forecastResponse = new Gson().fromJson(response, ForecastResponse.class);
         List<DailyData> dailyData = forecastResponse.daily.data;
+        List<HourlyData> hourlyDataList = forecastResponse.hourly.data;
         final ViewPager pager = findViewById(R.id.pager);
         final List<ScreenSlidePageFragment> fragments = new ArrayList<>();
         for (DailyData dailyDatum : dailyData) {
             fragments.add(ScreenSlidePageFragment.getInstance(dailyDatum));
         }
+        fragments.get(0).setHourlyData(hourlyDataList);
 
         handler.post(new Runnable() {
             @Override
@@ -157,6 +159,8 @@ public class WeatherForecastActivity extends AppCompatActivity {
                 pager.setVisibility(View.VISIBLE);
             }
         });
+        Toast.makeText(context, "<-- Swipe Left and Right -->",
+                Toast.LENGTH_SHORT).show();
     }
 
     private void handleError(VolleyError error) {

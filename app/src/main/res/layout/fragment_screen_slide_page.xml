@@ -57,7 +57,7 @@
         android:layout_width="336dp"
         android:layout_height="56dp"
         android:layout_marginTop="235dp"
-        android:background="#70FFFFFF"
+        android:background="@color/White"
         android:fontFamily="@font/averia_sans_libre_light"
         android:text="TextView"
         android:textAlignment="center"
@@ -86,7 +86,7 @@
         android:layout_width="336dp"
         android:layout_height="37dp"
         android:layout_marginTop="292dp"
-        android:background="#70FFFFFF"
+        android:background="@color/White"
         android:fontFamily="@font/averia_sans_libre_light"
         android:text="TextView"
         android:textAlignment="center"
@@ -105,5 +105,48 @@
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="336dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="345dp"
+        android:fontFamily="@font/averia_sans_libre_light"
+        android:text="Hourly Data"
+        android:textAlignment="center"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        android:background="@color/White"/>
+
+    <HorizontalScrollView
+        android:id="@+id/horizontal_scroll"
+        android:layout_width="336dp"
+        android:layout_height="112dp"
+        android:layout_marginTop="430dp"
+        android:background="@color/White"
+        android:fadeScrollbars="true"
+        android:fillViewport="true"
+        android:measureAllChildren="false"
+        android:scrollbars="none"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/scroll_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/White"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
 </android.support.constraint.ConstraintLayout>
