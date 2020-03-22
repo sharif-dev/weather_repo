@@ -3,8 +3,10 @@ package edu.sharif.sharif_dev.weather;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,16 +30,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         final ArrayList<String>  cityNames = new ArrayList<>();
-        ListView list = findViewById(R.id.listview_search);
+        final ListView list = findViewById(R.id.listview_search);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, cityNames);
         list.setAdapter(adapter);
+        final ArrayList<ArrayList<Double>> centerClasses = new ArrayList<>();
 
         Button search_btn = findViewById(R.id.search_btn);
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*String searchText;
+                String searchText;
                 EditText search_input = findViewById(R.id.search_inp);
                 if (search_input.getText() != null & !Objects.requireNonNull(search_input.getText()).toString().equals("")) {
                     searchText = search_input.getText().toString(); // get query from user
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                     ProgressBar progressBar = findViewById(R.id.progressBar);
                     progressBar.setVisibility(View.VISIBLE);
 // make map box thread
-                    GetMap getMap = new GetMap(searchText, getApplicationContext(), progressBar,cityNames,adapter);
+                    GetMap getMap = new GetMap(searchText, getApplicationContext(), progressBar,cityNames,adapter,centerClasses);
                     getMap.start();
 
 
@@ -53,11 +55,24 @@ public class MainActivity extends AppCompatActivity {
                     Toast toast = Toast.makeText(getApplicationContext(), R.string.search_input_error, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                     toast.show();
-                }*/
-                goToWeatherPage(45.6892,  40.3890, "", true);
+
+                }
             }
         });
 
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Log.d("pos",""+position);
+                double latitude = centerClasses.get(position).get(0);
+                double longitude = centerClasses.get(position).get(1);
+                goToWeatherPage(latitude, longitude,true);
+
+              
+            }
+        });
+              //  goToWeatherPage(45.6892,  40.3890, "", true);
+   
     }
 
     /**
