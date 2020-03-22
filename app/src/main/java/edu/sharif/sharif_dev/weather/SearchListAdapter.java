@@ -38,11 +38,11 @@ public class SearchListAdapter extends ArrayAdapter {
         View rowView = inflater.inflate(R.layout.search_list_row, null);
 
         //this code gets references to objects in the listview_row.xml file
-        TextView nameTextField = (TextView) rowView.findViewById(R.id.cityNameID);
-
-        //this code sets the values of the objects to values from the arrays
-        String[] array = cityNameArray.toArray(new String[cityNameArray.size()]);
-        nameTextField.setText(array[position]);
+//        TextView nameTextField = (TextView) rowView.findViewById(R.id.cityNameID);
+//
+//        //this code sets the values of the objects to values from the arrays
+//        String[] array = cityNameArray.toArray(new String[cityNameArray.size()]);
+//        nameTextField.setText(array[position]);
 
         return rowView;
 

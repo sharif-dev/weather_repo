@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/search_inp"
             android:layout_width="266dp"
             android:layout_height="38dp"
@@ -29,6 +29,7 @@
             android:textCursorDrawable="@color/FrenchBlue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:imeOptions="actionSearch"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
@@ -64,15 +65,18 @@
 
     <ListView
         android:id="@+id/listview_search"
-        android:layout_width="405dp"
+        android:layout_width="350dp"
         android:layout_height="652dp"
         android:layout_marginBottom="240dp"
+        android:foregroundGravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8.0sp"/>
 
 
 </android.support.constraint.ConstraintLayout>

@@ -10,4 +10,21 @@
     <string name="internet_status">internet_status</string>
     <string name="summary">Summary</string>
     <string name="cityName">cityName</string>
+    <string name="token_error">Invalid token</string>
+    <string name="forbidden">Forbidden</string>
+    <string name="not_found">Not found</string>
+    <string name="query_length_error">Query too long</string>
+    <string name="rate_error">Rate limit exceeded</string>
+    <string-array name="location_suggestion">
+        <item>Tehran</item>
+        <item>shiraz</item>
+        <item>tabriz</item>
+        <item>baneh</item>
+        <item>mosul</item>
+        <item>delhi</item>
+        <item>baghdad</item>
+        <item>yazd</item>
+        <item>isfahan</item>
+        <item>babol</item>
+    </string-array>
 </resources>
