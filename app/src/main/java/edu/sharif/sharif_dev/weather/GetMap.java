@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.android.volley.Request;
@@ -122,9 +121,9 @@ public class GetMap extends Thread {
 
     }
     private void showError(){
-        Toast toast = Toast.makeText(context, R.string.mapbox_error, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
-        toast.show();
+        CustomHandler ch = new CustomHandler(context);
+        ch.sendIntMessage(R.string.mapbox_error);
+
     }
     private void sendToUI(){
         Runnable showCode = new Runnable() {
