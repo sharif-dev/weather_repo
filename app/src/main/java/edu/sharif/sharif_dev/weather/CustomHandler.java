@@ -36,6 +36,5 @@ public class CustomHandler extends Handler {
             toast.show();
         }
 
-
     }
 }

@@ -76,7 +76,7 @@ public class GetMap extends Thread {
 
     @Override
     public void run(){
-
+    //showError();
 // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(context);
         String url ="https://api.mapbox.com/geocoding/v5/mapbox.places/"+query+".json?access_token="+accessToken;

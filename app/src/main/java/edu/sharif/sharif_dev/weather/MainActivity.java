@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
                     CustomHandler ch = new CustomHandler(getApplicationContext());
-                    ch.sendIntMessage(R.string.search_location);
+                    ch.sendIntMessage(R.string.search_input_error);
                 }
             }
         });
