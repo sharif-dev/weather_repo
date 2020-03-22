@@ -9,4 +9,5 @@
     <string name="longitude">longitude</string>
     <string name="internet_status">internet_status</string>
     <string name="summary">Summary</string>
+    <string name="cityName">cityName</string>
 </resources>

@@ -57,6 +57,7 @@
         android:layout_width="336dp"
         android:layout_height="56dp"
         android:layout_marginTop="235dp"
+        android:background="#70FFFFFF"
         android:fontFamily="@font/averia_sans_libre_light"
         android:text="TextView"
         android:textAlignment="center"
@@ -82,9 +83,10 @@
 
     <TextView
         android:id="@+id/date"
-        android:layout_width="128dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="290dp"
+        android:layout_width="336dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="292dp"
+        android:background="#70FFFFFF"
         android:fontFamily="@font/averia_sans_libre_light"
         android:text="TextView"
         android:textAlignment="center"
@@ -103,6 +105,5 @@
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </android.support.constraint.ConstraintLayout>
