@@ -62,10 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                 } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), R.string.search_input_error, Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
-                    toast.show();
-
+                    CustomHandler ch = new CustomHandler(getApplicationContext());
+                    ch.sendIntMessage(R.string.search_location);
                 }
             }
         });
@@ -114,4 +112,5 @@ public class MainActivity extends AppCompatActivity {
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
     }
+
 }
