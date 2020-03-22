@@ -1,6 +1,9 @@
 package edu.sharif.sharif_dev.weather;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -21,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+// check internet connection
+        if(!checkConnection()){
+            goToWeatherPage(0,0,"",false);
+        }
         setContentView(R.layout.activity_main);
 
 
@@ -66,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Log.d("pos",""+position);
                 double latitude = centerClasses.get(position).get(0);
                 double longitude = centerClasses.get(position).get(1);
                 goToWeatherPage(latitude, longitude,cityNames.get(position),true);
@@ -91,5 +97,18 @@ public class MainActivity extends AppCompatActivity {
         // client has internet
         intent.putExtra(getString(R.string.internet_status), internetConnection);
         startActivity(intent);
+// to finish this activity  = not show main activity and use cache
+        if(!internetConnection){
+            finish();
+        }
+    }
+
+    private boolean checkConnection(){
+        ConnectivityManager cm =
+                (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
     }
 }
