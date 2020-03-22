@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/CetaceanBlue"
+    android:background="@drawable/main_background1"
     tools:context=".MainActivity">
 
     <android.support.constraint.ConstraintLayout
@@ -12,7 +12,6 @@
         android:layout_width="383dp"
         android:layout_height="71dp"
         android:layout_marginTop="8dp"
-        android:background="@color/FrenchBlue"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,6 +26,7 @@
             android:ems="10"
             android:hint="@string/search_location"
             android:inputType="textPersonName"
+            android:textCursorDrawable="@color/FrenchBlue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -64,13 +64,15 @@
 
     <ListView
         android:id="@+id/listview_search"
-        android:layout_width="match_parent"
-        android:layout_height="344dp"
+        android:layout_width="405dp"
+        android:layout_height="652dp"
         android:layout_marginBottom="240dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </android.support.constraint.ConstraintLayout>
