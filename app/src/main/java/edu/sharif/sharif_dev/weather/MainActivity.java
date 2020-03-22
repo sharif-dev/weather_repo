@@ -7,14 +7,17 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -30,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
 
-
+// make array adapter
         final ArrayList<String> cityNames = new ArrayList<>();
         final ListView list = findViewById(R.id.listview_search);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, cityNames);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.search_list_row, cityNames);
         list.setAdapter(adapter);
         final ArrayList<ArrayList<Double>> centerClasses = new ArrayList<>();
 
@@ -41,30 +44,23 @@ public class MainActivity extends AppCompatActivity {
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String searchText;
-                EditText search_input = findViewById(R.id.search_inp);
-                if (search_input.getText() != null & !Objects.requireNonNull(search_input.getText()).toString().equals("")) {
-                    searchText = search_input.getText().toString(); // get query from user
+                startSearching(cityNames,adapter,centerClasses);
+            }
+        });
 
-                    ProgressBar progressBar = findViewById(R.id.progressBar);
-                    progressBar.setVisibility(View.VISIBLE);
-// make map box thread
-                    GetMap.Builder builder = new GetMap.Builder();
-                    builder = builder.withQuery(searchText);
-                    builder = builder.withProgressBar(progressBar);
-                    builder = builder.withContext(getApplicationContext());
-                    builder = builder.withCityNames(cityNames);
-                    builder = builder.withArrayAdapter(adapter);
-                    builder = builder.withCenterClasses(centerClasses);
-
-                    GetMap getMap = builder.build();
-                    getMap.start();
-
-
-                } else {
-                    CustomHandler ch = new CustomHandler(getApplicationContext());
-                    ch.sendIntMessage(R.string.search_input_error);
+        AutoCompleteTextView search_input = findViewById(R.id.search_inp);
+        String[] locations = getResources().getStringArray(R.array.location_suggestion);
+        ArrayAdapter<String> searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, locations );
+        search_input.setAdapter(searchAdapter);
+        search_input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                    startSearching(cityNames,adapter,centerClasses);
+                    handled = true;
                 }
+                return handled;
             }
         });
 
@@ -111,6 +107,33 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
+    }
+
+    private void startSearching(ArrayList<String> cityNames,ArrayAdapter<String> adapter,ArrayList<ArrayList<Double>> centerClasses ){
+        String searchText;
+        EditText search_input = findViewById(R.id.search_inp);
+        if (search_input.getText() != null & !Objects.requireNonNull(search_input.getText()).toString().equals("")) {
+            searchText = search_input.getText().toString(); // get query from user
+
+            ProgressBar progressBar = findViewById(R.id.progressBar);
+            progressBar.setVisibility(View.VISIBLE);
+// make map box thread
+            GetMap.Builder builder = new GetMap.Builder();
+            builder = builder.withQuery(searchText);
+            builder = builder.withProgressBar(progressBar);
+            builder = builder.withContext(getApplicationContext());
+            builder = builder.withCityNames(cityNames);
+            builder = builder.withArrayAdapter(adapter);
+            builder = builder.withCenterClasses(centerClasses);
+
+            GetMap getMap = builder.build();
+            getMap.start();
+
+
+        } else {
+            CustomHandler ch = new CustomHandler(getApplicationContext());
+            ch.sendIntMessage(R.string.search_input_error);
+        }
     }
 
 }
