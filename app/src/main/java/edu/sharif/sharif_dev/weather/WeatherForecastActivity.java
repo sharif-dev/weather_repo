@@ -62,7 +62,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * activity for getting weather forecast from DarkSky.net
@@ -79,6 +82,7 @@ public class WeatherForecastActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_forecast);
+        findViewById(R.id.textView).setVisibility(View.GONE);
         context = getApplicationContext();
         waitingGif = findViewById(R.id.waiting_gif);
         Intent intent = getIntent();
@@ -92,6 +96,12 @@ public class WeatherForecastActivity extends AppCompatActivity {
             getWeather(latitude, longitude);
         } else {
             stopWaitingGif();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.textView).setVisibility(View.VISIBLE);
+                }
+            });
             noInternetViews();
         }
     }
@@ -165,8 +175,14 @@ public class WeatherForecastActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(context, "Your device is not connected to internet.",
                         Toast.LENGTH_SHORT).show();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((ViewPager) findViewById(R.id.pager)).setVisibility(View.GONE);
+                        findViewById(R.id.textView).setVisibility(View.VISIBLE);
+                    }
+                });
                 // load from database
-                ((ViewPager) findViewById(R.id.pager)).setVisibility(View.GONE);
                 noInternetViews();
                 return;
             }
@@ -228,7 +244,7 @@ public class WeatherForecastActivity extends AppCompatActivity {
         }).start();
     }
 
-    private HashMap<String, String[]> readFromLocalHistory() {
+    private TreeMap<String, String[]> readFromLocalHistory() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] projection = {
                 BaseColumns._ID,
@@ -238,8 +254,9 @@ public class WeatherForecastActivity extends AppCompatActivity {
         };
         // get all rows from database
         Cursor cursor = db.query(WeatherForecastContract.FeedEntry.TABLE_NAME,
-                projection, null, null, null, null, null);
-        HashMap<String, String[]> result = new HashMap<>();
+                projection, null, null, null, null,
+                "datetime(" + WeatherForecastContract.FeedEntry.COLUMN_NAME_DATE + ") DESC");
+        TreeMap<String, String[]> result = new TreeMap<>();
         while (cursor.moveToNext()) {
             String date = cursor.getString(
                     cursor.getColumnIndexOrThrow(WeatherForecastContract.FeedEntry.COLUMN_NAME_DATE));
@@ -283,32 +300,40 @@ public class WeatherForecastActivity extends AppCompatActivity {
     }
 
     private void noInternetViews() {
-        final HashMap<String, String[]> history = readFromLocalHistory();
-        final ArrayList<String> stringList = new ArrayList<>();
-        final ArrayList<String> keys = new ArrayList<>();
-        for (String string : history.keySet()) {
-            String[] strings = history.get(string);
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM HH:mm");
-            stringList.add(strings[1] + "  " + sdf.format(new Date(Long.valueOf(string))));
-            keys.add(string);
-        }
-        Collections.reverse(stringList);
-        final ListView listView = findViewById(R.id.listView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String response = history.get(keys.get(i))[0];
-                getResponse(response, false);
-            }
-        });
-        final ArrayAdapter arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1
-                , stringList);
-        handler.post(new Runnable() {
+        // run a thread for reading database and update UI
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                listView.setAdapter(arrayAdapter);
+                final TreeMap<String, String[]> history = readFromLocalHistory();
+                final ArrayList<String> stringList = new ArrayList<>();
+                final ArrayList<String> keys = new ArrayList<>();
+
+                for (String string : history.keySet()) {
+                    String[] strings = history.get(string);
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM HH:mm");
+                    stringList.add(strings[1] + "  " + sdf.format(new Date(Long.valueOf(string))));
+                    keys.add(string);
+                }
+                Collections.reverse(stringList);
+                Collections.reverse(keys);
+                final ListView listView = findViewById(R.id.listView);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        String response = history.get(keys.get(i))[0];
+                        getResponse(response, false);
+                    }
+                });
+                final ArrayAdapter arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                        android.R.layout.simple_list_item_1, stringList);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        listView.setAdapter(arrayAdapter);
+                    }
+                });
             }
-        });
+        }).start();
     }
 
 }

@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        final ArrayList<String>  cityNames = new ArrayList<>();
+        final ArrayList<String> cityNames = new ArrayList<>();
         final ListView list = findViewById(R.id.listview_search);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, cityNames);
         list.setAdapter(adapter);
@@ -69,12 +69,15 @@ public class MainActivity extends AppCompatActivity {
                 //Log.d("pos",""+position);
                 double latitude = centerClasses.get(position).get(0);
                 double longitude = centerClasses.get(position).get(1);
-                goToWeatherPage(latitude, longitude,cityNames.get(position),true);
+
+                System.out.println("lat: " + latitude + " long: " + longitude);
+
+                goToWeatherPage(latitude, longitude, cityNames.get(position), true);
 
             }
         });
-              //  goToWeatherPage(45.6892,  40.3890, "", true);
-   
+        //  goToWeatherPage(45.6892,  40.3890, "", true);
+
     }
 
     /**
