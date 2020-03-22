@@ -3,20 +3,15 @@ package edu.sharif.sharif_dev.weather;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
-
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -47,7 +42,15 @@ public class MainActivity extends AppCompatActivity {
                     ProgressBar progressBar = findViewById(R.id.progressBar);
                     progressBar.setVisibility(View.VISIBLE);
 // make map box thread
-                    GetMap getMap = new GetMap(searchText, getApplicationContext(), progressBar,cityNames,adapter,centerClasses);
+                    GetMap.Builder builder = new GetMap.Builder();
+                    builder = builder.withQuery(searchText);
+                    builder = builder.withProgressBar(progressBar);
+                    builder = builder.withContext(getApplicationContext());
+                    builder = builder.withCityNames(cityNames);
+                    builder = builder.withArrayAdapter(adapter);
+                    builder = builder.withCenterClasses(centerClasses);
+
+                    GetMap getMap = builder.build();
                     getMap.start();
 
 
@@ -66,9 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 //Log.d("pos",""+position);
                 double latitude = centerClasses.get(position).get(0);
                 double longitude = centerClasses.get(position).get(1);
-                goToWeatherPage(latitude, longitude,true);
+                goToWeatherPage(latitude, longitude,cityNames.get(position),true);
 
-              
             }
         });
               //  goToWeatherPage(45.6892,  40.3890, "", true);

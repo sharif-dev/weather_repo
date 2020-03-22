@@ -25,11 +25,48 @@ public class GetMap extends Thread {
     private Context context;
     private ProgressBar progressBar;
     private final ArrayList<String> cityNames;
-    private ArrayList<ArrayList> centerClasses = new ArrayList<>();
+    private ArrayList<ArrayList<Double>> centerClasses;
     private ArrayAdapter<String> arrayAdapter;
     private final String accessToken = "pk.eyJ1IjoiemFocmF5b3VzZWZpIiwiYSI6ImNrN3A3OTB4NjA3OTQzZnJybm44Nmh4YW0ifQ.WDrn4Q_HTxBV8D53wtemYA";
 
-    GetMap(String query, Context context, ProgressBar progressBar, ArrayList<String> cityNames, ArrayAdapter<String> arrayAdapter, ArrayList centerClasses){
+    static class Builder{
+        String query;
+        Context context;
+        ProgressBar progressBar;
+        ArrayList<String> cityNames;
+        ArrayList<ArrayList<Double>> centerClasses = new ArrayList<>();
+        ArrayAdapter<String> arrayAdapter;
+        Builder withQuery(String query){
+            this.query = query;
+            return this;
+        }
+        Builder withContext(Context context){
+            this.context = context;
+            return this;
+        }
+        Builder withProgressBar(ProgressBar progressBar){
+            this.progressBar = progressBar;
+            return  this;
+        }
+        Builder withCityNames(ArrayList<String> cityNames){
+            this.cityNames = cityNames;
+            return this;
+        }
+        Builder withArrayAdapter(ArrayAdapter<String> adapter){
+            this.arrayAdapter = adapter;
+            return this;
+        }
+        Builder withCenterClasses(ArrayList<ArrayList<Double>> centerClasses){
+            this.centerClasses = centerClasses;
+            return this;
+        }
+        GetMap build(){
+            return new GetMap(query,context,progressBar,cityNames,arrayAdapter,centerClasses);
+        }
+
+    }
+
+   private GetMap(String query, Context context, ProgressBar progressBar, ArrayList<String> cityNames, ArrayAdapter<String> arrayAdapter, ArrayList<ArrayList<Double>> centerClasses){
         this.query = query;
         this.context = context;
         this.progressBar = progressBar;
