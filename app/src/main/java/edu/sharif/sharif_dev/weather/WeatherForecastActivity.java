@@ -132,7 +132,7 @@ public class WeatherForecastActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void getResponse(String response, boolean connected) {
+    private void getResponse(final String response, boolean connected) {
         if (connected) {
             stopWaitingGif();
             saveResult(response);
@@ -141,26 +141,28 @@ public class WeatherForecastActivity extends AppCompatActivity {
         System.out.println("response: " + response);
         // show result (without UI)
 
-        this.forecastResponse = new Gson().fromJson(response, ForecastResponse.class);
-        List<DailyData> dailyData = forecastResponse.daily.data;
-        List<HourlyData> hourlyDataList = forecastResponse.hourly.data;
-        final ViewPager pager = findViewById(R.id.pager);
-        final List<ScreenSlidePageFragment> fragments = new ArrayList<>();
-        for (DailyData dailyDatum : dailyData) {
-            fragments.add(ScreenSlidePageFragment.getInstance(dailyDatum));
-        }
-        fragments.get(0).setHourlyData(hourlyDataList);
 
         handler.post(new Runnable() {
             @Override
             public void run() {
+                forecastResponse = new Gson().fromJson(response, ForecastResponse.class);
+                List<DailyData> dailyData = forecastResponse.daily.data;
+                List<HourlyData> hourlyDataList = forecastResponse.hourly.data;
+                final ViewPager pager = findViewById(R.id.pager);
+                final List<ScreenSlidePageFragment> fragments = new ArrayList<>();
+                for (DailyData dailyDatum : dailyData) {
+                    fragments.add(ScreenSlidePageFragment.getInstance(dailyDatum));
+                }
+                fragments.get(0).setHourlyData(hourlyDataList);
                 pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragments));
                 pager.setPageTransformer(true, new ParallaxPageTransformer());
                 pager.setVisibility(View.VISIBLE);
+                Toast.makeText(context, "<-- Swipe Left and Right -->",
+                        Toast.LENGTH_SHORT).show();
             }
         });
-        Toast.makeText(context, "<-- Swipe Left and Right -->",
-                Toast.LENGTH_SHORT).show();
+
+
     }
 
     private void handleError(VolleyError error) {
@@ -301,6 +303,7 @@ public class WeatherForecastActivity extends AppCompatActivity {
         public int getCount() {
             return 7;
         }
+
     }
 
     private void noInternetViews() {

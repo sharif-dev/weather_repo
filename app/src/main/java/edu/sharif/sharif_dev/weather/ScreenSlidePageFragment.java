@@ -26,6 +26,7 @@ import java.util.List;
 public class ScreenSlidePageFragment extends Fragment {
     private DailyData dailyData;
     private List<HourlyData> hourlyData = null;
+    private Handler handler = new Handler();
 
     public static ScreenSlidePageFragment getInstance(DailyData dailyData) {
         ScreenSlidePageFragment screenSlidePageFragment = new ScreenSlidePageFragment();
@@ -40,7 +41,7 @@ public class ScreenSlidePageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_screen_slide_page, container, false);
         TextView day = rootView.findViewById(R.id.day);
         setTime(day);
@@ -48,16 +49,20 @@ public class ScreenSlidePageFragment extends Fragment {
         icon.setText(dailyData.icon);
         TextView sum = rootView.findViewById(R.id.summary);
         sum.setText(dailyData.summary);
-        TextView temperature = rootView.findViewById(R.id.temperature);
-        setTemperatur(temperature);
-        TextView date = rootView.findViewById(R.id.date);
-        setDate(date);
+        final TextView temperature = rootView.findViewById(R.id.temperature);
 
-        if (hourlyData != null)
-            setDailyDataView(rootView);
-
-        ImageView imageView = rootView.findViewById(R.id.imageView3);
-        imageView.setImageResource(getIdForImageView());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                setTemperatur(temperature);
+                TextView date = rootView.findViewById(R.id.date);
+                setDate(date);
+                if (hourlyData != null)
+                    setDailyDataView(rootView);
+                ImageView imageView = rootView.findViewById(R.id.imageView3);
+                imageView.setImageResource(getIdForImageView());
+            }
+        });
         return rootView;
     }
 
@@ -80,28 +85,17 @@ public class ScreenSlidePageFragment extends Fragment {
     }
 
     private int getIdForImageView() {
-        if (dailyData.icon.equals("clear-day"))
-            return R.drawable.clear_day;
-        else if (dailyData.icon.equals("clear-night"))
-            return R.drawable.clear_night;
-        else if (dailyData.icon.equals("rain"))
+        if (dailyData.icon.equals("clear-day") || dailyData.icon.equals("clear-night") || dailyData.icon.equals("sleet"))
+            return R.drawable.clear;
+        else if (dailyData.icon.equals("rain") || dailyData.icon.equals("fog"))
             return R.drawable.rain;
         else if (dailyData.icon.equals("snow"))
             return R.drawable.snow;
-        else if (dailyData.icon.equals("sleet"))
-            return R.drawable.sleet;
-        else if (dailyData.icon.equals("wind"))
-            return R.drawable.wind;
-        else if (dailyData.icon.equals("fog"))
-            return R.drawable.fog;
-        else if (dailyData.icon.equals("cloudy"))
+        else if (dailyData.icon.equals("wind") || dailyData.icon.equals("cloudy") || dailyData.icon.equals("partly-cloudy-day")
+                || dailyData.icon.equals("partly-cloudy-night"))
             return R.drawable.cloudy;
-        else if (dailyData.icon.equals("partly-cloudy-day"))
-            return R.drawable.other;
-        else if (dailyData.icon.equals("partly-cloudy-night"))
-            return R.drawable.other;
         else
-            return R.drawable.other;
+            return R.drawable.clear;
     }
 
     private void setDailyDataView(View view) {
