@@ -46,6 +46,8 @@ public class CustomHandler extends Handler {
             case R.string.rate_error:
                 makeToast(R.string.rate_error);
                 return;
+            case R.string.no_answer:
+                makeToast(R.string.no_answer);
         }
 
     }

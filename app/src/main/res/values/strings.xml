@@ -7,6 +7,7 @@
     <string name="forecast_provider" translatable="false">https://api.darksky.net/forecast/</string>
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
+    <string name="no_answer">No answer</string>
     <string name="internet_status">internet_status</string>
     <string name="summary">Summary</string>
     <string name="cityName">cityName</string>

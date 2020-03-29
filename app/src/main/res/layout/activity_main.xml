@@ -26,7 +26,7 @@
             android:ems="10"
             android:hint="@string/search_location"
             android:inputType="textPersonName"
-            android:textCursorDrawable="@color/FrenchBlue"
+            android:cursorVisible="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:imeOptions="actionSearch"

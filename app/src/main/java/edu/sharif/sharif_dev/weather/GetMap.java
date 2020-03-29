@@ -106,8 +106,12 @@ public class GetMap extends Thread {
                                 cityNames.add(mapClass.getFeatures().get(i).getPlace_name());
                                 centerClasses.add(mapClass.getFeatures().get(i).getCenter());
                             }
+                            if(centerClasses.size() == 0)
+                                showError(R.string.no_answer);
 
-                            sendToUI();
+                            else
+                                sendToUI();
+
 
                         } catch (Exception e) {
                             showError(R.string.mapbox_error);
