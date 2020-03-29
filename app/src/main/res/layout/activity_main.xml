@@ -22,7 +22,7 @@
             android:layout_width="266dp"
             android:layout_height="38dp"
             android:layout_marginStart="44dp"
-            android:background="@drawable/serach_backgorund"
+            android:background="@drawable/serach_input_backgorund"
             android:ems="10"
             android:hint="@string/search_location"
             android:inputType="textPersonName"
