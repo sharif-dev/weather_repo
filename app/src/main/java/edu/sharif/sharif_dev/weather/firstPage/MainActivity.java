@@ -1,4 +1,4 @@
-package edu.sharif.sharif_dev.weather;
+package edu.sharif.sharif_dev.weather.firstPage;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,6 +21,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+
+import edu.sharif.sharif_dev.weather.R;
+import edu.sharif.sharif_dev.weather.WeatherForecastActivity;
 
 public class MainActivity extends AppCompatActivity {
     final ArrayList<String> cityNames = new ArrayList<>();

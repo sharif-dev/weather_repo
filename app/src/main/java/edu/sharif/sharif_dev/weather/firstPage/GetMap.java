@@ -1,4 +1,4 @@
-package edu.sharif.sharif_dev.weather;
+package edu.sharif.sharif_dev.weather.firstPage;
 
 import android.content.Context;
 import android.os.Handler;
@@ -16,6 +16,8 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+
+import edu.sharif.sharif_dev.weather.R;
 
 
 public class GetMap extends Thread {

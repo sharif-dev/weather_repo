@@ -1,4 +1,4 @@
-package edu.sharif.sharif_dev.weather;
+package edu.sharif.sharif_dev.weather.firstPage;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.sharif.sharif_dev.weather.R;
 
 
 public class SearchSuggestionAdapter extends ArrayAdapter<String> {
