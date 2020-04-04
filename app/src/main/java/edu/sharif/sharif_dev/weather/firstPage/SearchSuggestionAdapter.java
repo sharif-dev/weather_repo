@@ -1,4 +1,5 @@
 package edu.sharif.sharif_dev.weather.firstPage;
+
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class SearchSuggestionAdapter extends ArrayAdapter<String> {
     private int resourceId;
     private List<String> items, tempItems, suggestions;
 
-    public SearchSuggestionAdapter(@NonNull Context context, int resourceId, ArrayList<String> items) {
+    SearchSuggestionAdapter(@NonNull Context context, int resourceId, ArrayList<String> items) {
         super(context, resourceId, items);
         this.items = items;
         this.context = context;
@@ -29,6 +31,7 @@ public class SearchSuggestionAdapter extends ArrayAdapter<String> {
         tempItems = new ArrayList<>(items);
         suggestions = new ArrayList<>();
     }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -48,31 +51,36 @@ public class SearchSuggestionAdapter extends ArrayAdapter<String> {
         }
         return view;
     }
+
     @Nullable
     @Override
     public String getItem(int position) {
         return items.get(position);
     }
+
     @Override
     public int getCount() {
         return items.size();
     }
+
     @Override
     public long getItemId(int position) {
         return position;
     }
+
     @NonNull
     @Override
     public Filter getFilter() {
         return suggestionFilter;
     }
+
     private Filter suggestionFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
             if (charSequence != null) {
                 suggestions.clear();
 // find the suggestion
-                for (String suggestion: tempItems) {
+                for (String suggestion : tempItems) {
                     if (suggestion.toLowerCase().startsWith(charSequence.toString().toLowerCase())) {
                         suggestions.add(suggestion);
                     }
@@ -85,6 +93,7 @@ public class SearchSuggestionAdapter extends ArrayAdapter<String> {
                 return new FilterResults();
             }
         }
+
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
             ArrayList<String> tempValues = (ArrayList<String>) filterResults.values;

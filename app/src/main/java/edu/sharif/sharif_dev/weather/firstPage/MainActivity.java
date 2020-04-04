@@ -28,7 +28,7 @@ import edu.sharif.sharif_dev.weather.WeatherForecastActivity;
 public class MainActivity extends AppCompatActivity {
     final ArrayList<String> cityNames = new ArrayList<>();
     final ArrayList<ArrayList<Double>> centerClasses = new ArrayList<>();
-    ArrayAdapter<String> resultAdapter ;
+    ArrayAdapter<String> resultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +61,11 @@ public class MainActivity extends AppCompatActivity {
                 double latitude = centerClasses.get(position).get(0);
                 double longitude = centerClasses.get(position).get(1);
 
-//                System.out.println("lat: " + latitude + " long: " + longitude);
 
                 goToWeatherPage(longitude, latitude, cityNames.get(position), true);
 
             }
         });
-        //  goToWeatherPage(45.6892,  40.3890, "", true);
 
     }
 
@@ -132,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         final ArrayList<String> locations = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.location_suggestion)));
         final SearchSuggestionAdapter searchSuggestionAdapter = new SearchSuggestionAdapter(this, R.layout.suggestion_layout, locations);
         search_input.setAdapter(searchSuggestionAdapter);
+
 // defines the number of characters to get before display suggestions
         search_input.setThreshold(1);
 

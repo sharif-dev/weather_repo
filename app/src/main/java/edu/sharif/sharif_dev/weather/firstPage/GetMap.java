@@ -28,7 +28,6 @@ public class GetMap extends Thread {
     private final ArrayList<String> cityNames;
     private ArrayList<ArrayList<Double>> centerClasses;
     private ArrayAdapter<String> arrayAdapter;
-    private final String accessToken = "pk.eyJ1IjoiemFocmF5b3VzZWZpIiwiYSI6ImNrN3A3OTB4NjA3OTQzZnJybm44Nmh4YW0ifQ.WDrn4Q_HTxBV8D53wtemYA";
 
     static class Builder {
         String query;
@@ -88,6 +87,7 @@ public class GetMap extends Thread {
     public void run() {
 // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(context);
+        String accessToken = "pk.eyJ1IjoiemFocmF5b3VzZWZpIiwiYSI6ImNrN3A3OTB4NjA3OTQzZnJybm44Nmh4YW0ifQ.WDrn4Q_HTxBV8D53wtemYA";
         String url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + query + ".json?access_token=" + accessToken;
 
 // Request a string response from the provided URL.
@@ -98,23 +98,7 @@ public class GetMap extends Thread {
                         progressBar.setVisibility(View.GONE);
                         Log.d("tag", "Get Response");
                         try {
-                            Gson gson = new Gson();
-
-                            MapClass mapClass = gson.fromJson(response, MapClass.class);
-                            centerClasses.clear();
-                            cityNames.clear(); // clear the last list
-
-                            for (int i = 0; i < mapClass.getFeatures().size(); i++) {
-                                cityNames.add(mapClass.getFeatures().get(i).getPlace_name());
-                                centerClasses.add(mapClass.getFeatures().get(i).getCenter());
-                            }
-                            if(centerClasses.size() == 0)
-                                showError(R.string.no_answer);
-
-                            else
-                                sendToUI();
-
-
+                            getResponse(response);
                         } catch (Exception e) {
                             showError(R.string.mapbox_error);
                         }
@@ -133,6 +117,25 @@ public class GetMap extends Thread {
 
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
+    }
+
+    private void getResponse(String response) {
+        Gson gson = new Gson();
+
+        MapClass mapClass = gson.fromJson(response, MapClass.class);
+        centerClasses.clear();
+        cityNames.clear(); // clear the last list
+
+        for (int i = 0; i < mapClass.getFeatures().size(); i++) {
+            cityNames.add(mapClass.getFeatures().get(i).getPlace_name());
+            centerClasses.add(mapClass.getFeatures().get(i).getCenter());
+        }
+        if (centerClasses.size() == 0)
+            showError(R.string.no_answer);
+
+        else
+            sendToUI();
+
     }
 
     private boolean handleError(int code) {
@@ -162,7 +165,6 @@ public class GetMap extends Thread {
         ch.sendIntMessage(stringId);
     }
 
-    //TODO
     private void sendToUI() {
         Runnable showCode = new Runnable() {
             @Override
