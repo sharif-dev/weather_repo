@@ -108,8 +108,12 @@ public class GetMap extends Thread {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
-                if (!handleError(error.networkResponse.statusCode)) {
-                    // if not handled
+                try {
+                    if (!handleError(error.networkResponse.statusCode)) {
+                        // if not handled
+                        showError(R.string.mapbox_error);
+                    }
+                }catch (NullPointerException e){
                     showError(R.string.mapbox_error);
                 }
             }
