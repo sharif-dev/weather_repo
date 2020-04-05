@@ -316,7 +316,7 @@ public class WeatherForecastActivity extends AppCompatActivity {
                     }
                 });
                 final ArrayAdapter arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),
-                        android.R.layout.simple_list_item_1, stringList);
+                        R.layout.list_view_item, stringList);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
