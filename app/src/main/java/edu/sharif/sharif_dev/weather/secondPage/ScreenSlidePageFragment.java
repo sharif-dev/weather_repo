@@ -1,27 +1,20 @@
-package edu.sharif.sharif_dev.weather;
+package edu.sharif.sharif_dev.weather.secondPage;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import edu.sharif.sharif_dev.weather.R;
 
 public class ScreenSlidePageFragment extends Fragment {
     private DailyData dailyData;
@@ -54,12 +47,12 @@ public class ScreenSlidePageFragment extends Fragment {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                setTemperatur(temperature);
+                setTemperature(temperature);
                 TextView date = rootView.findViewById(R.id.date);
                 setDate(date);
                 if (hourlyData != null)
                     setDailyDataView(rootView);
-                ImageView imageView = rootView.findViewById(R.id.imageView3);
+                ImageView imageView = rootView.findViewById(R.id.back_image);
                 imageView.setImageResource(getIdForImageView());
             }
         });
@@ -78,21 +71,26 @@ public class ScreenSlidePageFragment extends Fragment {
         textView.setText(dayString);
     }
 
-    private void setTemperatur(TextView textView) {
+    private void setTemperature(TextView textView) {
         double temp = (dailyData.temperatureHigh + dailyData.temperatureLow) / 2;
         // convert to celsius
         textView.setText(String.valueOf(Math.round((temp - 32) * (0.5556))));
     }
 
     private int getIdForImageView() {
-        if (dailyData.icon.equals("clear-day") || dailyData.icon.equals("clear-night") || dailyData.icon.equals("sleet"))
+        if (dailyData.icon.equals(getString(R.string.clear_day))
+                || dailyData.icon.equals(getString(R.string.clear_night))
+                || dailyData.icon.equals(getString(R.string.sleet)))
             return R.drawable.clear;
-        else if (dailyData.icon.equals("rain") || dailyData.icon.equals("fog"))
+        else if (dailyData.icon.equals(getString(R.string.rain))
+                || dailyData.icon.equals(getString(R.string.fog)))
             return R.drawable.rain;
-        else if (dailyData.icon.equals("snow"))
+        else if (dailyData.icon.equals(getString(R.string.snow)))
             return R.drawable.snow;
-        else if (dailyData.icon.equals("wind") || dailyData.icon.equals("cloudy") || dailyData.icon.equals("partly-cloudy-day")
-                || dailyData.icon.equals("partly-cloudy-night"))
+        else if (dailyData.icon.equals(getString(R.string.wind))
+                || dailyData.icon.equals(getString(R.string.cloudy))
+                || dailyData.icon.equals(getString(R.string.partly_cloudy_day))
+                || dailyData.icon.equals(getString(R.string.partly_cloudy_night)))
             return R.drawable.cloudy;
         else
             return R.drawable.clear;
@@ -104,7 +102,6 @@ public class ScreenSlidePageFragment extends Fragment {
         LinearLayout layout = view.findViewById(R.id.scroll_layout);
         TextView textView;
         ViewGroup.LayoutParams layoutParams;
-        System.out.println(hourlyData.size());
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, HH:mm");
         for (HourlyData hourlyDatum : hourlyData) {
             textView = new TextView(getContext());
@@ -118,7 +115,6 @@ public class ScreenSlidePageFragment extends Fragment {
                     + "\n" + Math.round((hourlyDatum.temperature - 32) * (0.5556))
                     + " 'C";
             textView.setText(text);
-
             layout.addView(textView);
         }
     }

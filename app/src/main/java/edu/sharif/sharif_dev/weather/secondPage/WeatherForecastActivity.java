@@ -1,4 +1,4 @@
-package edu.sharif.sharif_dev.weather;
+package edu.sharif.sharif_dev.weather.secondPage;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,16 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.provider.BaseColumns;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,10 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -55,17 +46,13 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.SortedMap;
 import java.util.TreeMap;
+
+import edu.sharif.sharif_dev.weather.R;
 
 /**
  * activity for getting weather forecast from DarkSky.net
@@ -89,6 +76,8 @@ public class WeatherForecastActivity extends AppCompatActivity {
         dbHelper = new WeatherForecastDbHelper(getApplicationContext());
         handler = new Handler();
         boolean internetStatus = intent.getBooleanExtra(getString(R.string.internet_status), false);
+
+        // check internet access
         if (internetStatus) {
             double longitude = intent.getDoubleExtra(getString(R.string.longitude), 0);
             double latitude = intent.getDoubleExtra(getString(R.string.latitude), 0);
@@ -96,12 +85,8 @@ public class WeatherForecastActivity extends AppCompatActivity {
             getWeather(latitude, longitude);
         } else {
             stopWaitingGif();
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    findViewById(R.id.textView).setVisibility(View.VISIBLE);
-                }
-            });
+            findViewById(R.id.textView).setVisibility(View.VISIBLE);
+            // no internet access, load from database
             noInternetViews();
         }
     }
@@ -137,17 +122,14 @@ public class WeatherForecastActivity extends AppCompatActivity {
             stopWaitingGif();
             saveResult(response);
         }
-        // todo
-        System.out.println("response: " + response);
-        // show result (without UI)
-
-
         handler.post(new Runnable() {
             @Override
             public void run() {
                 forecastResponse = new Gson().fromJson(response, ForecastResponse.class);
                 List<DailyData> dailyData = forecastResponse.daily.data;
                 List<HourlyData> hourlyDataList = forecastResponse.hourly.data;
+
+                // set ViewPager
                 final ViewPager pager = findViewById(R.id.pager);
                 final List<ScreenSlidePageFragment> fragments = new ArrayList<>();
                 for (DailyData dailyDatum : dailyData) {
@@ -157,7 +139,9 @@ public class WeatherForecastActivity extends AppCompatActivity {
                 pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragments));
                 pager.setPageTransformer(true, new ParallaxPageTransformer());
                 pager.setVisibility(View.VISIBLE);
-                Toast.makeText(context, "<-- Swipe Left and Right -->",
+
+                // show user guide
+                Toast.makeText(context, getString(R.string.swipe_help),
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -176,10 +160,10 @@ public class WeatherForecastActivity extends AppCompatActivity {
                 activeNetwork = cm.getActiveNetworkInfo();
             }
             if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
-                Toast.makeText(context, "Server is not connected to internet.",
+                Toast.makeText(context, getString(R.string.server_error),
                         Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(context, "Your device is not connected to internet.",
+                Toast.makeText(context, getString(R.string.not_connected),
                         Toast.LENGTH_SHORT).show();
                 handler.post(new Runnable() {
                     @Override
@@ -195,36 +179,36 @@ public class WeatherForecastActivity extends AppCompatActivity {
         } else if (error.getCause() == null) {
             ForecastResponseError responseError = new Gson().fromJson(new String(error.networkResponse.data)
                     , ForecastResponseError.class);
-            Toast.makeText(context, "Error From DarkSky.net: " + responseError.getMessage(),
+            Toast.makeText(context, getString(R.string.darksky_error) + responseError.getMessage(),
                     Toast.LENGTH_SHORT).show();
         } else if (error instanceof NetworkError || error.getCause() instanceof ConnectException
                 || (error.getCause().getMessage() != null
-                && error.getCause().getMessage().contains("connection"))) {
-            Toast.makeText(context, "Your device is not connected to internet.",
+                && error.getCause().getMessage().contains(getString(R.string.connection)))) {
+            Toast.makeText(context, getString(R.string.not_connected),
                     Toast.LENGTH_SHORT).show();
         } else if (error.getCause() instanceof MalformedURLException) {
-            Toast.makeText(context, "Bad Request.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.bad_Request), Toast.LENGTH_SHORT).show();
         } else if (error instanceof ParseError || error.getCause() instanceof IllegalStateException
                 || error.getCause() instanceof JSONException
                 || error.getCause() instanceof XmlPullParserException) {
-            Toast.makeText(context, "Parse Error (because of invalid json or xml).",
+            Toast.makeText(context, getString(R.string.parse_error),
                     Toast.LENGTH_SHORT).show();
         } else if (error.getCause() instanceof OutOfMemoryError) {
-            Toast.makeText(context, "Out Of Memory Error.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.out_of_memory), Toast.LENGTH_SHORT).show();
         } else if (error instanceof AuthFailureError) {
-            Toast.makeText(context, "server couldn't find the authenticated request.",
+            Toast.makeText(context, getString(R.string.request_error),
                     Toast.LENGTH_SHORT).show();
         } else if (error instanceof ServerError || error.getCause() instanceof ServerError) {
-            Toast.makeText(context, "Server is not responding.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.server_not_responding), Toast.LENGTH_SHORT).show();
         } else if (error instanceof TimeoutError || error.getCause() instanceof SocketTimeoutException
                 || error.getCause() instanceof ConnectTimeoutException
                 || error.getCause() instanceof SocketException
                 || (error.getCause().getMessage() != null
-                && error.getCause().getMessage().contains("Connection timed out"))) {
-            Toast.makeText(context, "Connection timeout error",
+                && error.getCause().getMessage().contains(getString(R.string.time_out)))) {
+            Toast.makeText(context, getString(R.string.time_out),
                     Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "An unknown error occurred.",
+            Toast.makeText(context, getString(R.string.unknown_error),
                     Toast.LENGTH_SHORT).show();
         }
 

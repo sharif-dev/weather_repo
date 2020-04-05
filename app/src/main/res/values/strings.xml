@@ -28,4 +28,34 @@
         <item>isfahan</item>
         <item>babol</item>
     </string-array>
+    <!--weather icons-->
+    <string name="clear_day">clear-day</string>
+    <string name="clear_night">clear-night</string>
+    <string name="sleet">sleet</string>
+    <string name="rain">rain</string>
+    <string name="fog">fog</string>
+    <string name="snow">snow</string>
+    <string name="wind">wind</string>
+    <string name="cloudy">cloudy</string>
+    <string name="partly_cloudy_day">partly-cloudy-day</string>
+    <string name="partly_cloudy_night">partly-cloudy-night</string>
+
+    <string name="swipe_help">-- Swipe Left and Right --</string>
+
+    <!-- API errors -->
+    <string name="server_error">Server is not reachable.</string>
+    <string name="not_connected">Your device is not connected to internet.</string>
+    <string name="darksky_error">Error From DarkSky.net: </string>
+    <string name="connection">connection</string>
+    <string name="bad_Request">bad request</string>
+    <string name="parse_error">Parse Error (because of invalid json or xml).</string>
+    <string name="out_of_memory">Out Of Memory Error.</string>
+    <string name="request_error">server could not find the authenticated request.</string>
+    <string name="server_not_responding">Server is not responding.</string>
+    <string name="time_out">Connection timed out</string>
+    <string name="unknown_error">An unknown error occurred.</string>
+
+
+    <string name="hourly">Hourly Data</string>
+    <string name="history">Your Search History</string>
 </resources>

@@ -1,4 +1,4 @@
-package edu.sharif.sharif_dev.weather;
+package edu.sharif.sharif_dev.weather.secondPage;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

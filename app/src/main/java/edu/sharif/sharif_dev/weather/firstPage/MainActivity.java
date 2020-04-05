@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import edu.sharif.sharif_dev.weather.R;
-import edu.sharif.sharif_dev.weather.WeatherForecastActivity;
+import edu.sharif.sharif_dev.weather.secondPage.WeatherForecastActivity;
 
 public class MainActivity extends AppCompatActivity {
     final ArrayList<String> cityNames = new ArrayList<>();
@@ -33,13 +33,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-// check internet connection
+        // check internet connection
         if (!checkConnection()) {
             goToWeatherPage(0, 0, "", false);
         }
         setContentView(R.layout.activity_main);
 
-// set array adapter
+        // set array adapter
         final ListView list = findViewById(R.id.listview_search);
         resultAdapter = new ArrayAdapter<>(this, R.layout.search_list_row, cityNames);
         list.setAdapter(resultAdapter);
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         // client has internet
         intent.putExtra(getString(R.string.internet_status), internetConnection);
         startActivity(intent);
-// to finish this activity  = not show main activity and use cache
+        // to finish this activity  = not show main activity and use cache
         if (!internetConnection) {
             finish();
         }
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
             ProgressBar progressBar = findViewById(R.id.progressBar);
             progressBar.setVisibility(View.VISIBLE);
-// make map box thread
+            // make map box thread
             GetMap.Builder builder = new GetMap.Builder();
             builder = builder.withQuery(searchText);
             builder = builder.withProgressBar(progressBar);
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         final SearchSuggestionAdapter searchSuggestionAdapter = new SearchSuggestionAdapter(this, R.layout.suggestion_layout, locations);
         search_input.setAdapter(searchSuggestionAdapter);
 
-// defines the number of characters to get before display suggestions
+        // defines the number of characters to get before display suggestions
         search_input.setThreshold(1);
 
         search_input.setOnEditorActionListener(new TextView.OnEditorActionListener() {

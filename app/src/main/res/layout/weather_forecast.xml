@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WeatherForecastActivity">
+    tools:context=".secondPage.WeatherForecastActivity">
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/waiting_gif"
@@ -19,7 +19,7 @@
         android:id="@+id/textView"
         android:layout_width="411dp"
         android:layout_height="64dp"
-        android:text="Your Search History"
+        android:text="@string/history"
         android:textAlignment="center"
         android:textSize="30dp"
         app:layout_constraintEnd_toEndOf="parent"

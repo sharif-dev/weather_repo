@@ -1,4 +1,4 @@
-package edu.sharif.sharif_dev.weather;
+package edu.sharif.sharif_dev.weather.secondPage;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

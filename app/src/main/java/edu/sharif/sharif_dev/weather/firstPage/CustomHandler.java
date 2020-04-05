@@ -1,10 +1,12 @@
-package edu.sharif.sharif_dev.weather;
+package edu.sharif.sharif_dev.weather.firstPage;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.widget.Toast;
+
+import edu.sharif.sharif_dev.weather.R;
 
 
 public class CustomHandler extends Handler {
