@@ -113,7 +113,7 @@ public class GetMap extends Thread {
                         // if not handled
                         showError(R.string.mapbox_error);
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     showError(R.string.mapbox_error);
                 }
             }
